@@ -11,15 +11,9 @@ public class Switch {
         private  boolean R8on;
         private  boolean R9on;
 
-        private int TextureR1;
-        private int TextureR2;
-        private int TextureR3;
-        private int TextureR4;
-        private int TextureR5;
-        private int TextureR6;
-        private int TextureR7;
-        private int TextureR8;
-        private int TextureR9;
+
+
+        private int[] TextureR= new int[]{10, 20, 30, 40, 50, 60, 70, 80, 90};
 
         private int clickCount;
 
@@ -72,13 +66,13 @@ public class Switch {
         public void setR1() {
             R1on = true;
             clickCount++;
-            TextureR1=clickCount%2;
+            TextureR[0]=clickCount%2;
         }
 
         public void setR2() {
             R2on = true;
             clickCount++;
-            TextureR2=clickCount%2;
+            TextureR[1]=clickCount%2;
 
 
         }
@@ -86,79 +80,79 @@ public class Switch {
         public void setR3() {
             R3on = true;
             clickCount++;
-            TextureR3=clickCount%2;
+            TextureR[2]=clickCount%2;
         }
 
         public void setR4() {
             R4on = true;
             clickCount++;
-            TextureR4=clickCount%2;
+            TextureR[3]=clickCount%2;
         }
 
         public void setR5() {
             R5on = true;
             clickCount++;
-            TextureR5=clickCount%2;
+            TextureR[4]=clickCount%2;
         }
 
         public void setR6() {
             R6on = true;
             clickCount++;
-            TextureR6=clickCount%2;
+            TextureR[5]=clickCount%2;
         }
 
         public void setR7() {
             R7on = true;
             clickCount++;
-            TextureR7=clickCount%2;
+            TextureR[6]=clickCount%2;
         }
 
         public void setR8() {
             R8on = true;
             clickCount++;
-            TextureR8=clickCount%2;
+            TextureR[7]=clickCount%2;
         }
 
         public void setR9() {
             R9on = true;
             clickCount++;
-            TextureR9=clickCount%2;
+            TextureR[8]=clickCount%2;
         }
 
     public int getTextureR1() {
-        return TextureR1;
+        return TextureR[0];
     }
 
     public int getTextureR2() {
-        return TextureR2;
+        return TextureR[1];
     }
 
     public int getTextureR3() {
-        return TextureR3;
+        return TextureR[2];
     }
 
     public int getTextureR4() {
-        return TextureR4;
+        return TextureR[3];
     }
 
     public int getTextureR5() {
-        return TextureR5;
+        return TextureR[4];
     }
 
     public int getTextureR6() {
-        return TextureR6;
+        return TextureR[5];
     }
 
     public int getTextureR7() {
-        return TextureR7;
+        return TextureR[6];
     }
 
     public int getTextureR8() {
-        return TextureR8;
+        return TextureR[7];
     }
 
     public int getTextureR9() {
-        return TextureR9;
+        return TextureR[8];
     }
 }
 

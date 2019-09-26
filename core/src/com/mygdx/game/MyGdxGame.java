@@ -36,15 +36,27 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	private Texture XImage;
 	private Texture OImage;
+	private Texture XWin;
+	private Texture OWin;
+	private Texture Draw;
 	private Texture TableImage;
 	private Rectangle XRec;
 	private Rectangle ORec;
-	
+	private Rectangle XWinRec;
+	private Rectangle OWinRec;
+	private Rectangle DrawRec;
+
+	private int result;
+	private int player;
 	@Override
 	public void create () {
 		TableImage = new Texture(Gdx.files.internal("Table.png"));
 		XImage = new Texture(Gdx.files.internal("X.png"));
 		OImage = new Texture(Gdx.files.internal("O.png"));
+		XWin = new Texture(Gdx.files.internal("Xwin.png"));
+		OWin = new Texture(Gdx.files.internal("Owin.png"));
+		Draw = new Texture(Gdx.files.internal("Draw.png"));
+
 
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
@@ -58,6 +70,18 @@ public class MyGdxGame extends ApplicationAdapter {
 		ORec = new Rectangle();
 		ORec.width = 170;
 		ORec.height = 150;
+
+		XWinRec = new Rectangle();
+		XWinRec.width = 281;
+		XWinRec.height = 112;
+
+		OWinRec = new Rectangle();
+		OWinRec.width = 281;
+		OWinRec.height = 112;
+
+		DrawRec = new Rectangle();
+		DrawRec.width = 256;
+		DrawRec.height = 112;
 
 		R1=new Rectangle();
 		R1.x=0;
@@ -166,6 +190,13 @@ public class MyGdxGame extends ApplicationAdapter {
 		if(aSwitch.R9on()&&(aSwitch.getTextureR9()==1))
 			batch.draw(OImage, R9.x + (R9.width / 2) - ORec.width / 2, R9.y - (R9.height / 2) - ORec.height / 2);
 
+		if(result==1&&player==1)
+			batch.draw(OWin,WIDTH/2-OWinRec.width/2,HEIGHT/2-OWinRec.height/2);
+		if(result==1&&player==0)
+			batch.draw(XWin,WIDTH/2-XWinRec.width/2,HEIGHT/2-XWinRec.height/2);
+		if(result==-1&&player==-1)
+			batch.draw(Draw,WIDTH/2-XWinRec.width/2,HEIGHT/2-XWinRec.height/2);
+
 
 		batch.end();
 
@@ -175,26 +206,29 @@ public class MyGdxGame extends ApplicationAdapter {
 			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(touchPos);
-			if((touchPos.x<R2.x&&touchPos.y<R1.y)&&aSwitch.R1on()==false)
-				aSwitch.setR1();
-			if((touchPos.x>R2.x&&touchPos.x<R3.x)&&touchPos.y<R2.y&&(aSwitch.R2on()==false))
-				aSwitch.setR2();
-			if(touchPos.x>R3.x&&touchPos.y<R3.y&&(aSwitch.R3on()==false))
-				aSwitch.setR3();
-			if(touchPos.x<R5.x&&(touchPos.y>R1.y&&touchPos.y<R4.y)&&(aSwitch.R4on()==false))
-				aSwitch.setR4();
-			if((touchPos.x>R5.x&&touchPos.x<R6.x)&&(touchPos.y<R5.y&&touchPos.y>R2.y)&&(aSwitch.R5on()==false))
-				aSwitch.setR5();
-			if((touchPos.y<R6.y&&touchPos.y>R3.y)&&touchPos.x>R6.x&&(aSwitch.R6on()==false))
-				aSwitch.setR6();
-			if(touchPos.x<R8.x&&touchPos.y>R4.y&&(aSwitch.R7on()==false))
-				aSwitch.setR7();
-			if((touchPos.x>R8.x&&touchPos.x<R9.x)&&touchPos.y>R5.y&&(aSwitch.R8on()==false))
-				aSwitch.setR8();
-			if(touchPos.x>R9.x&&touchPos.y>R6.y&&(aSwitch.R9on()==false))
-				aSwitch.setR9();
+			if(result==0) {
+				if ((touchPos.x < R2.x && touchPos.y < R1.y) && aSwitch.R1on() == false)
+					aSwitch.setR1();
+				if ((touchPos.x > R2.x && touchPos.x < R3.x) && touchPos.y < R2.y && (aSwitch.R2on() == false))
+					aSwitch.setR2();
+				if (touchPos.x > R3.x && touchPos.y < R3.y && (aSwitch.R3on() == false))
+					aSwitch.setR3();
+				if (touchPos.x < R5.x && (touchPos.y > R1.y && touchPos.y < R4.y) && (aSwitch.R4on() == false))
+					aSwitch.setR4();
+				if ((touchPos.x > R5.x && touchPos.x < R6.x) && (touchPos.y < R5.y && touchPos.y > R2.y) && (aSwitch.R5on() == false))
+					aSwitch.setR5();
+				if ((touchPos.y < R6.y && touchPos.y > R3.y) && touchPos.x > R6.x && (aSwitch.R6on() == false))
+					aSwitch.setR6();
+				if (touchPos.x < R8.x && touchPos.y > R4.y && (aSwitch.R7on() == false))
+					aSwitch.setR7();
+				if ((touchPos.x > R8.x && touchPos.x < R9.x) && touchPos.y > R5.y && (aSwitch.R8on() == false))
+					aSwitch.setR8();
+				if (touchPos.x > R9.x && touchPos.y > R6.y && (aSwitch.R9on() == false))
+					aSwitch.setR9();
 
-
+				result=chkwin();
+			}
+			//System.out.println(result);
 		}
 	}
 	
@@ -203,8 +237,63 @@ public class MyGdxGame extends ApplicationAdapter {
 		XImage.dispose();
 		OImage.dispose();
 		batch.dispose();
+		TableImage.dispose();
+		XWin.dispose();
+		OWin.dispose();
 
 
 
+	}
+
+	public int chkwin(){
+		int result=0;
+		if((aSwitch.getTextureR1()==aSwitch.getTextureR2())
+			&&aSwitch.getTextureR2()== aSwitch.getTextureR3()){
+				result=1;
+				player=aSwitch.getTextureR1()%2==1? 1:0;
+		}
+		else if((aSwitch.getTextureR4()==aSwitch.getTextureR5())
+				&&aSwitch.getTextureR5()== aSwitch.getTextureR6()){
+			result=1;
+			player=aSwitch.getTextureR4()%2==1? 1:0;
+		}
+		else if((aSwitch.getTextureR7()==aSwitch.getTextureR8())
+				&&aSwitch.getTextureR8()== aSwitch.getTextureR9()){
+			result=1;
+			player=aSwitch.getTextureR7()%2==1? 1:0;
+		}
+		else if((aSwitch.getTextureR1()==aSwitch.getTextureR4())
+				&&aSwitch.getTextureR4()== aSwitch.getTextureR7()){
+			result=1;
+			player=aSwitch.getTextureR1()%2==1? 1:0;
+		}
+		else if((aSwitch.getTextureR2()==aSwitch.getTextureR5())
+				&&aSwitch.getTextureR5()== aSwitch.getTextureR8()){
+			result=1;
+			player=aSwitch.getTextureR2()%2==1? 1:0;
+		}
+		else if((aSwitch.getTextureR3()==aSwitch.getTextureR6())
+				&&aSwitch.getTextureR6()== aSwitch.getTextureR9()){
+			result=1;
+			player=aSwitch.getTextureR3()%2==1? 1:0;
+		}
+		else if((aSwitch.getTextureR1()==aSwitch.getTextureR5())
+				&&aSwitch.getTextureR5()== aSwitch.getTextureR9()){
+			result=1;
+			player=aSwitch.getTextureR1()%2==1? 1:0;
+		}
+		else if((aSwitch.getTextureR3()==aSwitch.getTextureR5())
+				&&aSwitch.getTextureR5()== aSwitch.getTextureR7()){
+			result=1;
+			player=aSwitch.getTextureR3()%2==1? 1:0;
+		}
+		else if(aSwitch.getTextureR1()!=10 && aSwitch.getTextureR2()!=20 && aSwitch.getTextureR3()!=30 && aSwitch.getTextureR4()!=40
+				&& aSwitch.getTextureR5()!=50 && aSwitch.getTextureR6()!=60&& aSwitch.getTextureR7()!=70
+				&& aSwitch.getTextureR8()!=80&& aSwitch.getTextureR9()!=90){
+			result=-1;
+			player=-1;
+		}
+
+		return result;
 	}
 }
